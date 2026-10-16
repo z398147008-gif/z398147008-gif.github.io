@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Beiras, 1936–2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Literata:opsz,wght@7..72,400;7..72,600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: visor con eje 1936–2026 por etapas + ficha grande · debajo, cronología completa filtrable · gráfico de escaños */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --ink:#14202c; --muted:#5a6773; --line:#d3dae1;
+  --azul:#0b5ea8; --azul-soft:#dbe8f5; --pol:#0b5ea8; --aca:#2f7d6b; --vida:#9a5b2c;
+  --e1:#e7ecf1; --e2:#dde6ee; --e3:#d1e0ee; --e4:#e2e5ec; --e5:#ebe7e2;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Literata",Georgia,serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1419; --surface:#151d25; --ink:#e7ecf1; --muted:#98a5b2; --line:#283340;
+  --azul:#5aa2e6; --azul-soft:#16304a; --pol:#5aa2e6; --aca:#5cc0a6; --vida:#d6945e;
+  --e1:#18212a; --e2:#1b2631; --e3:#1d2c3b; --e4:#1b2029; --e5:#221f1d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1419; --surface:#151d25; --ink:#e7ecf1; --muted:#98a5b2; --line:#283340;
+  --azul:#5aa2e6; --azul-soft:#16304a; --pol:#5aa2e6; --aca:#5cc0a6; --vida:#d6945e;
+  --e1:#18212a; --e2:#1b2631; --e3:#1d2c3b; --e4:#1b2029; --e5:#221f1d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding-block:30px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:30px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+header{display:grid;gap:12px;border-top:6px solid var(--azul);padding-top:18px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,8vw,84px);line-height:.95;margin:0;letter-spacing:-.02em;text-wrap:balance}
+h1 .yrs{display:block;font-weight:500;color:var(--azul);font-size:.5em;letter-spacing:0;margin-top:6px}
+.lede{max-width:64ch;margin:0;color:var(--muted)}
+h2{font-family:var(--f-display);font-size:26px;margin:0;letter-spacing:-.01em}
+/* visor */
+.viewer{background:var(--surface);border:1px solid var(--line);border-radius:6px;display:grid;gap:0;overflow:hidden}
+.axis-wrap{padding:16px 16px 6px;border-bottom:1px solid var(--line);overflow-x:auto}
+.axis{position:relative;min-width:720px;height:150px}
+.era{position:absolute;top:0;bottom:30px;border-right:1px solid var(--surface)}
+.era span{position:absolute;left:6px;top:4px;font-family:var(--f-display);font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.tick{position:absolute;bottom:0;font-family:var(--f-mono);font-size:11px;color:var(--muted);transform:translateX(-50%)}
+.tick::before{content:"";position:absolute;left:50%;bottom:18px;height:8px;border-left:1px solid var(--muted)}
+.pt{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:2px solid var(--surface);cursor:pointer;padding:0}
+.pt.c-pol{background:var(--pol)} .pt.c-aca{background:var(--aca)} .pt.c-vida{background:var(--vida)}
+.pt.on{outline:3px solid var(--ink);outline-offset:1px;z-index:2}
+.pt:focus-visible,.chip:focus-visible,.nav button:focus-visible,.ev:focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+.card{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:24px}
+@media (max-width:700px){.card{grid-template-columns:1fr;gap:10px}}
+.card .date{font-family:var(--f-display);font-weight:800;font-size:56px;line-height:1;color:var(--azul);font-variant-numeric:tabular-nums}
+.card .date small{display:block;font-family:var(--f-mono);font-size:13px;font-weight:500;color:var(--muted);margin-top:8px;letter-spacing:.03em}
+.card h3{font-family:var(--f-display);font-size:28px;line-height:1.15;margin:0 0 8px;text-wrap:balance}
+.card p{margin:0 0 10px;max-width:62ch}
+.card .meta{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:13px;color:var(--muted);font-family:var(--f-mono)}
+.badge{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;color:var(--surface)}
+.b-pol{background:var(--pol)} .b-aca{background:var(--aca)} .b-vida{background:var(--vida)}
+.nav{display:flex;gap:8px;align-items:center;padding:0 24px 20px}
+.nav button{font-family:var(--f-display);font-weight:700;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 14px;border-radius:4px;cursor:pointer}
+.nav button:hover{border-color:var(--azul)}
+.nav .count{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-left:auto}
+/* chart */
+.split{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:820px){.split{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:20px;display:grid;gap:12px;min-width:0}
+.panel p{margin:0;font-size:15px;color:var(--muted)}
+.bars{display:grid;gap:9px}
+.bar{display:grid;grid-template-columns:96px minmax(0,1fr) 34px;gap:10px;align-items:center;font-family:var(--f-mono);font-size:13px}
+.bar .tr{height:20px;background:var(--e1);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;background:var(--azul)}
+.bar.age .fill{background:var(--aca)}
+.bar b{font-family:var(--f-display);font-size:16px;text-align:right;font-variant-numeric:tabular-nums}
+.axis75{display:grid;grid-template-columns:96px minmax(0,1fr) 34px;gap:10px;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.axis75 div{display:flex;justify-content:space-between}
+blockquote{margin:0;font-size:20px;line-height:1.45;border-left:4px solid var(--azul);padding-left:16px}
+blockquote footer{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:8px}
+/* list */
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--f-display);font-weight:700;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sw{width:10px;height:10px;border-radius:50%}
+.list{display:grid;gap:26px}
+.group h3{font-family:var(--f-display);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--azul);margin:0 0 6px;padding-bottom:6px;border-bottom:2px solid var(--azul)}
+.ev{display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px;padding:10px 6px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:3px}
+.ev:hover,.ev.on{background:var(--azul-soft)}
+.ev .d{font-family:var(--f-mono);font-size:13px;color:var(--muted);padding-top:3px;font-variant-numeric:tabular-nums}
+.ev strong{font-family:var(--f-display);font-size:18px;display:block;line-height:1.25}
+.ev span.t{font-size:15px;color:var(--muted)}
+@media (max-width:560px){.ev{grid-template-columns:1fr;gap:2px}}
+.sources{font-size:13px;color:var(--muted)}
+.sources ol{padding-left:20px;margin:6px 0;display:grid;gap:3px}
+.sources a{color:var(--azul)}
+@media (prefers-reduced-motion:no-preference){.card{transition:opacity .2s}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Cronología interactiva · Nacionalismo galego contemporáneo</div>
+  <h1>Xosé Manuel Beiras<span class="yrs">1936 – 2026</span></h1>
+  <p class="lede">Economista, catedrático, traductor y fundador del BNG y de Anova. Murió el 8 de octubre de 2026 en su casa de A Reboraina (Brión), a los 90 años. Recorre sus nueve décadas en el eje: cada punto abre un momento de su vida.</p>
+</header>
+
+<section class="viewer" aria-label="Visor de la cronología">
+  <div class="axis-wrap"><div class="axis" id="axis"></div></div>
+  <div class="card" id="card" aria-live="polite"></div>
+  <div class="nav">
+    <button id="prev" type="button">← Anterior</button>
+    <button id="next" type="button">Siguiente →</button>
+    <span class="count" id="count"></span>
+  </div>
+</section>
+
+<div class="split">
+  <section class="panel" aria-label="Escaños en el Parlamento de Galicia">
+    <h2>Del escaño único a segunda fuerza</h2>
+    <p>Diputados obtenidos en las elecciones autonómicas por las candidaturas que encabezó o lideró.</p>
+    <div class="bars" id="bars"></div>
+    <div class="axis75"><span></span><div><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span></div><span></span></div>
+    <p>Fuentes: Gran Enciclopèdia Catalana (BNG, 1985–1997) y Enciclopèdia.cat / NacióDigital (AGE, 2012).</p>
+  </section>
+  <section class="panel" aria-label="Despedida">
+    <h2>La despedida</h2>
+    <blockquote>«Deja una gran huella en varias generaciones de gallegos y gallegas.»<footer>Ana Pontón, portavoz nacional del BNG · ESdiario, 8/10/2026</footer></blockquote>
+    <blockquote>«Un intelectual comprometido, con voz propia, crítico y siempre inconformista.»<footer>José Ramón Gómez Besteiro, PSdeG · Ara/EFE, 8/10/2026</footer></blockquote>
+  </section>
+</div>
+
+<section style="display:grid;gap:16px" aria-label="Cronología completa">
+  <h2>Cronología completa</h2>
+  <div class="filters" role="group" aria-label="Filtrar por tipo">
+    <button class="chip" id="c-all" data-c="all" aria-pressed="true">Todo</button>
+    <button class="chip" id="c-pol" data-c="pol" aria-pressed="false"><span class="sw" style="background:var(--pol)"></span>Política</button>
+    <button class="chip" id="c-aca" data-c="aca" aria-pressed="false"><span class="sw" style="background:var(--aca)"></span>Academia y obra</button>
+    <button class="chip" id="c-vida" data-c="vida" aria-pressed="false"><span class="sw" style="background:var(--vida)"></span>Vida</button>
+  </div>
+  <div class="list" id="list"></div>
+</section>
+
+<footer class="sources">
+  <h2 style="font-size:18px">Fuentes</h2>
+  <ol id="srcs"></ol>
+  <p>Elaboración: Xiao Yifeng. Fechas contrastadas entre al menos una fuente periodística o enciclopédica por hito.</p>
+</footer>
+</div>
+
+<script>
+const SRC=[
+ ["La Voz de Galicia (7/10/2026), «Morre Xosé Manuel Beiras…» (noticia de partida)","https://www.lavozdegalicia.es/noticia/galicia/2026/10/07/span-langglmorre-xose-manuel-beiras-historia-viva-do-nacionalismo-galego-contemporaneospan/00031791396576747800958.htm"],
+ ["Wikipedia (en), «Xosé Manuel Beiras»","https://en.wikipedia.org/wiki/Xos%C3%A9_Manuel_Beiras"],
+ ["Enciclopèdia.cat, «Xosé Manuel Beiras Torrado»","https://www.enciclopedia.cat/EC-GEC-0247061"],
+ ["Ara / EFE (8/10/2026), obituario","https://en.ara.cat/politics/dies-at-90-years-old-xose-manuel-beiras-historic-leader-of-galician-nationalism_1_5873043.html"],
+ ["Artículo14 (8/10/2026), «Muere Xosé Manuel Beiras a los 90 años…»","https://www.articulo14.es/espana-por-la-igualdad/muere-xose-manuel-beiras-a-los-90-anos-el-historico-lider-que-llevo-al-bng-a-ser-segunda-fuerza-en-galicia-20261008.html"],
+ ["ESdiario (8/10/2026), «Muere Xosé Manuel Beiras, el histórico adversario…»","https://www.esdiario.com/galicia/261008/199743/muere-xose-manuel-beiras-historico-adversario-nunca-doblego-pp-gallego.html"],
+ ["Demócrata, «Beiras, el intelectual que marcó el rumbo de la izquierda gallega»","https://www.democrata.es/actualidad/beiras-el-intelectual-que-marco-el-rumbo-de-la-izquierda-gallega-contemporanea/"],
+ ["NacióDigital, «Beiras, el rebel que volia governar Galícia»","https://naciodigital.cat/politica/beiras-el-rebel-que-volia-governar-galicia.html"],
+ ["El Salto (9/10/2026), Antón Sánchez, «Por que queremos a Beiras?»","https://www.elsaltodiario.com/obituario/queremos-beiras"],
+ ["Gran Enciclopèdia Catalana, «Bloque Nacionalista Galego»","https://www.enciclopedia.cat/gran-enciclopedia-catalana/bloque-nacionalista-galego"]
+];
+const ERAS=[
+ {n:"Formación",a:1936,b:1963,v:"--e1"},
+ {n:"PSG y universidad",a:1963,b:1982,v:"--e2"},
+ {n:"BNG",a:1982,b:2012,v:"--e3"},
+ {n:"Anova y AGE",a:2012,b:2024,v:"--e4"},
+ {n:"Últimos años",a:2024,b:2027,v:"--e5"}
+];
+const CAT={pol:"Política",aca:"Academia y obra",vida:"Vida"};
+const E=[
+ [1936.27,"7 abr 1936","vida","Nace en Santiago de Compostela","Xosé Manuel Hixinio Beiras Torrado nace pocos meses antes del golpe de Estado de julio de 1936.",[1,3]],
+ [1950.02,"1950","vida","La muerte de Castelao","Siendo adolescente recibe la noticia de la muerte de Castelao en el exilio de Buenos Aires. Contaba que ese día se hizo independentista.",[8]],
+ [1957.5,"1957","aca","Derecho en Santiago, Economía en París","Se licencia en Derecho por la Universidad de Santiago y se traslada a París para estudiar Economía en la Sorbona (1957–1960), donde también estudia lengua y literatura francesas.",[1,3]],
+ [1959.5,"1959","aca","Primera traducción: Antígona","Traduce al gallego la Antígona de Jean Anouilh junto a Xosé Luís Franco Grande. Más tarde traducirá también a Camus.",[1]],
+ [1961.5,"1961","aca","London School of Economics","Tras impartir su primer curso de economía política en Madrid (1960), amplía estudios en Londres.",[1,2]],
+ [1963.5,"1963","pol","Cofunda el Partido Socialista Galego","Participa en la fundación del PSG, organización clandestina de la izquierda nacionalista en plena dictadura franquista.",[1,4]],
+ [1967.5,"1967","aca","Premio en Nueva York","La Casa de Galicia de Nueva York premia su libro «O problema do desenrolo na Galiza rural».",[1]],
+ [1968.5,"1968","aca","Vuelta definitiva a Galicia","Se instala en Galicia como profesor de Economía en la Universidad de Santiago de Compostela.",[1]],
+ [1970.5,"1970","aca","Tesis doctoral premiada","Publica su tesis «Estructura y problemas de la población gallega», que obtiene el premio extraordinario de doctorado.",[1]],
+ [1971.5,"1971","pol","Secretario general del PSG","Asume la dirección del partido que había ayudado a fundar.",[1]],
+ [1972.5,"1972","aca","«O atraso económico da Galiza»","Publica una de sus obras clave, un análisis del subdesarrollo gallego como problema estructural.",[1]],
+ [1977.5,"1977","pol","Deja la dirección del PSG","Dimite tras los malos resultados en las primeras elecciones democráticas. Ese año ingresa en la Real Academia Galega, que abandonará en 1982 por discrepancias con su política lingüística.",[1]],
+ [1980.5,"1980","aca","Catedrático de Estructura Económica","Obtiene la cátedra en la Facultad de Ciencias Económicas de la USC.",[1]],
+ [1982.5,"1982","pol","Fundación del BNG","Participa en la asamblea constituyente del Bloque Nacionalista Galego, que une a varias fuerzas nacionalistas.",[1,2]],
+ [1985.9,"24 nov 1985","pol","Único diputado del BNG","Toma posesión como diputado en el Parlamento de Galicia. Es el único representante del Bloque.",[1,6,7]],
+ [1997.8,"1997","pol","El BNG, segunda fuerza","Con Beiras como candidato, el Bloque logra 18 escaños y casi el 25 % de los votos. Es su techo durante más de dos décadas.",[1,5,9]],
+ [2003.5,"2003","pol","Relevo en el liderazgo","Cede el liderazgo del BNG a Anxo Quintana y pasa a presidir el Consello Nacional.",[2]],
+ [2005.46,"19 jun 2005","pol","Deja el escaño","Termina su primera etapa parlamentaria, iniciada en 1985.",[1]],
+ [2007.5,"2007","pol","Encontro Irmandiño","Impulsa esta corriente crítica dentro del BNG para reclamar transparencia y democracia interna.",[1]],
+ [2008.7,"2008","pol","Foro Social Mundial","Es invitado a formar parte del consejo del Foro Social Mundial, tras años de implicación en movimientos altermundistas.",[1]],
+ [2010.5,"2010","aca","Premio CIEMEN","Recibe el premio del CIEMEN a la defensa de los derechos de los pueblos.",[2]],
+ [2012.05,"ene 2012","pol","La asamblea de Amio","En la XIII Asemblea Nacional del BNG su corriente obtiene el 45,6 % de los apoyos, pero pierde frente a la candidatura oficialista.",[6,9]],
+ [2012.15,"feb 2012","pol","Ruptura con el BNG","Abandona el Bloque junto al Encontro Irmandiño.",[2,4]],
+ [2012.45,"jun 2012","pol","Nace Anova","Funda Anova–Irmandade Nacionalista, de la que será líder hasta su muerte.",[2,4]],
+ [2012.8,"21 oct 2012","pol","AGE: 9 escaños y regreso al Parlamento","La coalición Alternativa Galega de Esquerda (Anova y Esquerda Unida) obtiene el 13,91 % y 9 diputados, por delante del BNG. Beiras vuelve al Pazo do Hórreo siete años después.",[2,6,7]],
+ [2016.8,"oct 2016","pol","Retirada parlamentaria","No se presenta a las elecciones del 25 de septiembre; Anova se integra en En Marea. Deja el escaño el 21 de octubre.",[1,2]],
+ [2024.05,"ene 2024","pol","Reencuentro con el BNG","Hace las paces con el Bloque y apoya la candidatura de Ana Pontón a la Xunta.",[6,7]],
+ [2026.3,"primavera 2026","aca","Libro sobre el PSG","Presenta un libro sobre la historia del Partido Socialista Galego, el partido que ayudó a crear.",[3]],
+ [2026.77,"8 oct 2026","vida","Muere en Brión a los 90 años","Fallece de madrugada en su casa de A Reboraina. Políticos de todo el arco gallego, de Ana Pontón a Alfonso Rueda, lo despiden.",[0,3,4,5]]
+];
+const Y0=1934,Y1=2028;
+const axis=document.getElementById("axis");
+const x=y=>((y-Y0)/(Y1-Y0)*100)+"%";
+ERAS.forEach(e=>{const d=document.createElement("div");d.className="era";d.style.left=x(e.a);d.style.width=((Math.min(e.b,Y1)-e.a)/(Y1-Y0)*100)+"%";d.style.background=`var(${e.v})`;d.innerHTML=`<span>${e.n}</span>`;axis.appendChild(d)});
+for(let y=1940;y<=2020;y+=10){const t=document.createElement("div");t.className="tick";t.style.left=x(y);t.textContent=y;axis.appendChild(t)}
+// carriles para evitar solapes
+const lanes=[];const LANEY=[54,76,98,120,42];
+E.forEach((e,i)=>{let l=0;while(lanes[l]!==undefined&&e[0]-lanes[l]<2.2)l++;lanes[l]=e[0];e.lane=Math.min(l,4)});
+let cur=E.length-1,filter="all";
+E.forEach((e,i)=>{const b=document.createElement("button");b.type="button";b.className="pt c-"+e[2];b.style.left=x(e[0]);b.style.top=LANEY[e.lane]+"px";b.setAttribute("aria-label",e[1]+": "+e[3]);b.title=e[1]+" · "+e[3];b.addEventListener("click",()=>show(i));e.pt=b;axis.appendChild(b)});
+function srcNames(a){return a.map(i=>`<a href="${SRC[i][1]}" target="_blank" rel="noopener">[${i+1}]</a>`).join(" ")}
+function era(y){return ERAS.find(e=>y>=e.a&&y<e.b).n}
+function show(i){
+  cur=i;const e=E[i];
+  document.getElementById("card").innerHTML=`<div class="date">${e[1].match(/\d{4}/)[0]}<small>${e[1]} · ${era(e[0])}</small></div>
+  <div><h3>${e[3]}</h3><p>${e[4]}</p><div class="meta"><span class="badge b-${e[2]}">${CAT[e[2]]}</span><span>Fuentes: ${srcNames(e[5])}</span></div></div>`;
+  E.forEach((x,j)=>x.pt.classList.toggle("on",j===i));
+  document.querySelectorAll(".ev").forEach(el=>el.classList.toggle("on",+el.dataset.i===i));
+  document.getElementById("count").textContent=`${i+1} / ${E.length}`;
+  const aw=document.querySelector(".axis-wrap");const px=e.pt.offsetLeft;if(px<aw.scrollLeft||px>aw.scrollLeft+aw.clientWidth)aw.scrollTo({left:px-aw.clientWidth/2,behavior:"smooth"});
+}
+function step(d){let i=cur;do{i=(i+d+E.length)%E.length}while(filter!=="all"&&E[i][2]!==filter&&i!==cur);show(i)}
+document.getElementById("prev").onclick=()=>step(-1);
+document.getElementById("next").onclick=()=>step(1);
+document.addEventListener("keydown",ev=>{if(ev.target.closest("input,textarea"))return;if(ev.key==="ArrowRight")step(1);if(ev.key==="ArrowLeft")step(-1)});
+// lista
+const list=document.getElementById("list");
+list.innerHTML=ERAS.map(er=>{const evs=E.map((e,i)=>[e,i]).filter(([e])=>e[0]>=er.a&&e[0]<er.b);
+ return `<div class="group"><h3>${er.n} · ${er.a}–${Math.min(er.b,2026)}</h3>${evs.map(([e,i])=>`<div class="ev" data-i="${i}" data-c="${e[2]}" tabindex="0" role="button"><span class="d">${e[1]}</span><div><strong>${e[3]}</strong><span class="t">${e[4]}</span></div></div>`).join("")}</div>`}).join("");
+list.querySelectorAll(".ev").forEach(el=>{const go=()=>{show(+el.dataset.i);document.querySelector(".viewer").scrollIntoView({behavior:"smooth",block:"start"})};el.addEventListener("click",go);el.addEventListener("keydown",k=>{if(k.key==="Enter"||k.key===" "){k.preventDefault();go()}})});
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{filter=c.dataset.c;document.querySelectorAll(".chip").forEach(o=>o.setAttribute("aria-pressed",o===c));
+ list.querySelectorAll(".ev").forEach(el=>el.hidden=filter!=="all"&&el.dataset.c!==filter);
+ list.querySelectorAll(".group").forEach(g=>g.hidden=![...g.querySelectorAll(".ev")].some(el=>!el.hidden));
+ E.forEach(e=>e.pt.style.opacity=filter==="all"||e[2]===filter?1:.18)}));
+// escaños
+const S=[["1985 BNG",1],["1989 BNG",5],["1993 BNG",13],["1997 BNG",18],["2012 AGE",9]];
+document.getElementById("bars").innerHTML=S.map(s=>`<div class="bar${s[0].includes("AGE")?" age":""}"><span>${s[0]}</span><div class="tr"><div class="fill" style="width:${s[1]/20*100}%"></div></div><b>${s[1]}</b></div>`).join("");
+document.getElementById("srcs").innerHTML=SRC.map(s=>`<li><a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a></li>`).join("");
+show(E.length-1);
+</script>
+
+</html>
